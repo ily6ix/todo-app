@@ -78,7 +78,7 @@
 
   <script>
     async function fetchCompleted() {
-      const res = await fetch(`/api/server/tasks`);
+      const res = await fetch(`/tasks`);
       const tasks = await res.json();
       const completed = tasks.filter(t => t.completed);
       const list = document.getElementById("completedList");

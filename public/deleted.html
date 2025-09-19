@@ -1,58 +1,119 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Deleted Tasks</title>
-<style>
-  body { font-family:"Segoe UI",sans-serif; background:#f4f6f8; display:flex; justify-content:center; padding-top:50px; }
-  .container { background:#fff; padding:30px; border-radius:12px; width:100%; max-width:600px; box-shadow:0 4px 12px rgba(0,0,0,0.1); }
-  h1 { text-align:center; margin-bottom:20px; }
-  ul { list-style:none; padding:0; }
-  li { padding:12px; border-radius:8px; margin-bottom:10px; background:#f9f9f9; display:flex; justify-content:space-between; border:1px solid #eee; }
-  button { padding:6px 10px; border:none; border-radius:6px; cursor:pointer; margin-left:5px; }
-  .btn-restore { background:#28a745; color:white; }
-  .nav-links { text-align:center; margin-top:20px; }
-  .nav-links a { color:#0078d7; text-decoration:none; margin:0 10px; }
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Deleted Tasks</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f6f9;
+      display: flex;
+      justify-content: center;
+      padding: 40px 20px;
+    }
+    .container {
+      width: 400px;
+      background: #fff;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+    h1 {
+      color: #333;
+      margin-bottom: 20px;
+    }
+    ul {
+      list-style: none;
+      padding: 0;
+      max-height: 300px;
+      overflow-y: auto;
+      margin-bottom: 20px;
+    }
+    li {
+      background: #ffe6e6;
+      padding: 12px;
+      margin: 8px 0;
+      border-radius: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: #b71c1c;
+      font-weight: bold;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    }
+    button {
+      padding: 6px 12px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      color: white;
+      background: #4caf50;
+      transition: 0.3s;
+    }
+    button:hover {
+      background: #45a049;
+    }
+    .restore-all {
+      background: #007bff;
+      margin-bottom: 15px;
+    }
+    .restore-all:hover {
+      background: #0056b3;
+    }
+    a {
+      display: inline-block;
+      margin-top: 15px;
+      text-decoration: none;
+      color: #007bff;
+    }
+  </style>
 </head>
 <body>
-<div class="container">
-  <h1>Deleted Tasks</h1>
-  <button onclick="restoreAll()" class="btn-restore">Restore All</button>
-  <ul id="deletedList"></ul>
-  <div class="nav-links"><a href="index.html">Back to To-Do List</a></div>
-</div>
+  <div class="container">
+    <h1>🗑️ Deleted Tasks</h1>
+    <button class="restore-all" onclick="restoreAll()">♻ Restore All</button>
+    <ul id="deletedList"></ul>
+    <a href="index.html">⬅ Back to To-Do List</a>
+  </div>
 
-<script>
-const API_BASE = "/api/server";
+  <script>
+    async function fetchDeleted() {
+      const res = await fetch(`/deleted`);
+      const tasks = await res.json();
+      const list = document.getElementById("deletedList");
+      list.innerHTML = "";
 
-async function fetchDeleted() {
-  const res = await fetch(`${API_BASE}/deleted`);
-  const tasks = await res.json();
-  const list = document.getElementById("deletedList");
-  list.innerHTML = "";
-  tasks.forEach(t => {
-    const li = document.createElement("li");
-    li.innerHTML = `
-      <span>${t.task}</span>
-      <button class="btn-restore" onclick="restoreTask(${t.id})">Restore</button>
-    `;
-    list.appendChild(li);
-  });
-}
+      if (tasks.length === 0) {
+        list.innerHTML = "<li>No deleted tasks</li>";
+        return;
+      }
 
-async function restoreTask(id) {
-  await fetch(`${API_BASE}/restore/${id}`, { method: "POST" });
-  fetchDeleted();
-}
+      tasks.forEach(t => {
+        const li = document.createElement("li");
+        li.textContent = t.task;
 
-async function restoreAll() {
-  await fetch(`${API_BASE}/restore-all`, { method: "POST" });
-  fetchDeleted();
-}
+        const restoreBtn = document.createElement("button");
+        restoreBtn.textContent = "Restore";
+        restoreBtn.onclick = () => restoreTask(t.id);
 
-fetchDeleted();
-</script>
+        li.appendChild(restoreBtn);
+        list.appendChild(li);
+      });
+    }
+
+    async function restoreTask(id) {
+      await fetch(`/restore/${id}`, { method: "POST" });
+      fetchDeleted();
+    }
+
+    async function restoreAll() {
+      await fetch(`/restore-all`, { method: "POST" });
+      fetchDeleted();
+    }
+
+    fetchDeleted();
+  </script>
 </body>
 </html>
