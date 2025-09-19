@@ -24,6 +24,18 @@ A simple, modern, and professional To-Do List web application built using **Java
 
 ---
 
+Usage
+
+Add a task: Type a task in the input field and click Add.
+
+Complete a task: Click the Complete button next to a task.
+
+Delete a task: Click Delete to move it to the deleted tasks list.
+
+Restore a task: In Deleted Tasks, click Restore next to a task or Restore All to restore everything.
+
+View completed tasks: Click View Completed Tasks on the main page.
+
 ## Installation & Setup
 
 1. Clone the repository:
