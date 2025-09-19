@@ -74,13 +74,15 @@
   <div class="container">
     <h1>🗑️ Deleted Tasks</h1>
     <button class="restore-all" onclick="restoreAll()">♻ Restore All</button>
-    <ul id="deletedList"></ul>
+    <ul id="deletedList">
+
+    </ul>
     <a href="index.html">⬅ Back to To-Do List</a>
   </div>
 
   <script>
     async function fetchDeleted() {
-      const res = await fetch(`/deleted`);
+      const res = await fetch(`/api/server/deleted`);
       const tasks = await res.json();
       const list = document.getElementById("deletedList");
       list.innerHTML = "";
@@ -104,12 +106,12 @@
     }
 
     async function restoreTask(id) {
-      await fetch(`/restore/${id}`, { method: "POST" });
+      await fetch(`/api/server/restore/${id}`, { method: "POST" });
       fetchDeleted();
     }
 
     async function restoreAll() {
-      await fetch(`/restore-all`, { method: "POST" });
+      await fetch(`/api/server/restore-all`, { method: "POST" });
       fetchDeleted();
     }
 

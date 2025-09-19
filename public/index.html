@@ -134,7 +134,7 @@
 
   <script>
     async function fetchTasks() {
-      const res = await fetch(`/tasks`);
+      const res = await fetch(`/api/server/tasks`);
       const tasks = await res.json();
       const list = document.getElementById("taskList");
       list.innerHTML = "";
@@ -165,12 +165,12 @@
     }
 
     async function completeTask(id) {
-      await fetch(`/tasks/${id}`, { method: "PUT" });
+      await fetch(`/api/server/tasks/${id}`, { method: "PUT" });
       fetchTasks();
     }
 
     async function deleteTask(id) {
-      await fetch(`/tasks/${id}`, { method: "DELETE" });
+      await fetch(`/api/server/tasks/${id}`, { method: "DELETE" });
       fetchTasks();
     }
 
