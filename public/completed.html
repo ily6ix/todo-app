@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Completed Tasks</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f6f8;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+    }
+
+    .container {
+      background: #fff;
+      margin-top: 40px;
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      width: 400px;
+      text-align: center;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+      color: #333;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    li {
+      background: #e6ffe6;
+      padding: 12px;
+      margin: 8px 0;
+      border-radius: 6px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: #2e7d32;
+      font-weight: bold;
+    }
+
+    li::after {
+      content: "✅";
+      margin-left: 10px;
+    }
+
+    a {
+      display: inline-block;
+      margin-top: 20px;
+      text-decoration: none;
+      color: white;
+      background: #007bff;
+      padding: 10px 20px;
+      border-radius: 6px;
+      transition: 0.3s;
+    }
+
+    a:hover {
+      background: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>✅ Completed Tasks</h1>
+    <ul id="completedList"></ul>
+    <a href="index.html">⬅ Back to To-Do List</a>
+  </div>
+
+  <script>
+    async function fetchCompleted() {
+      const res = await fetch(`/tasks`);
+      const tasks = await res.json();
+      const completed = tasks.filter(t => t.completed);
+      const list = document.getElementById("completedList");
+      list.innerHTML = "";
+
+      completed.forEach(t => {
+        const li = document.createElement("li");
+        li.textContent = t.task;
+        list.appendChild(li);
+      });
+    }
+
+    fetchCompleted();
+  </script>
+</body>
+</html>
