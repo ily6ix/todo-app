@@ -155,7 +155,7 @@
     async function addTask() {
       const task = document.getElementById("taskInput").value.trim();
       if (!task) return;
-      await fetch(`api/server/tasks`, {
+      await fetch(`/api/server/tasks`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ task })
